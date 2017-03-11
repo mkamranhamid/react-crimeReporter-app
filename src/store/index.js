@@ -15,7 +15,8 @@ const rootEpic = combineEpics(
   gitEpic.getAllCrimes,
   gitEpic.getAllMissings,
   gitEpic.registerReport,
-  gitEpic.getLoggedInUserData
+  gitEpic.getLoggedInUserData,
+  gitEpic.LogoutUser
 )
 
 const rootReducer = combineReducers({counterReducer})

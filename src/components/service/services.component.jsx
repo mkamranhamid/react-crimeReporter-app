@@ -4,14 +4,14 @@ import { browserHistory } from 'react-router';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton'
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 
 const styles = {
-  customWidth: {
-    width: 200,
-  },
+    customWidth: {
+        width: 200,
+    },
 };
 
 
@@ -49,7 +49,7 @@ class ServiceComponent extends Component {
         this.props.fileAReport(this.state)
         console.log(this.state)
     }
-    handleChange = (event, index, value) => this.setState({value});
+    handleChange = (event, index, value) => this.setState({ value });
     render() {
         const buttonStyle = { width: '100%' };
         if (this.props.reported && this.props.reported.value) {
@@ -77,7 +77,10 @@ class ServiceComponent extends Component {
                         <br />
                         <TextField
                             id="text-field-controlled1"
-                            hintText="Description"
+                            hintText="Add Description"
+                            multiLine={true}
+                            rows={2}
+                            rowsMax={4}
                             value={this.state.description}
                             onChange={({ target }) => { this.setState({ description: target.value }) } } />
                         <br />
@@ -91,7 +94,7 @@ class ServiceComponent extends Component {
 
                         <div className='LoginForm-Submit'>
                             <RaisedButton
-                                label='Signup'
+                                label='Add'
                                 primary
                                 type='submit'
                                 style={buttonStyle}

@@ -4,11 +4,12 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 
 import { GitAction } from '../../store/action/gitAction'
 import '../../app/App.css';
+import '../../assets/common.css';
 
 
 function mapStateToProps(state) {
     return {
-        allcomplains: state.counterReducer['crimes']
+        allcrimes: state.counterReducer['crimes']
     };
 }
 
@@ -25,23 +26,36 @@ class CrimeComponent extends Component {
     }
     render() {
 
-        let complains = this.props.allcomplains ? Object.keys(this.props.allcomplains).map((key) => { return this.props.allcomplains[key] }) : {};
-        if (complains.length > 0) {
-            var complainCard = complains.map((d, i) => {
-                return <div key={i} className="card">
-                    <div className="container">
-                        <h4><b>{d.title}</b></h4>
-                        <p>{d.description}</p>
+        let crimes = this.props.allcrimes ? Object.keys(this.props.allcrimes).map((key) => { return this.props.allcrimes[key] }) : {};
+        if (crimes.length > 0) {
+            var crimeCard = crimes.map((d, i) => {
+                return (<div className="col-xs-6" key={i}>
+                    <div className="box">
+                        <Card>
+                            <CardHeader
+                                title={d.title}
+                                showExpandableButton={true}
+                                />
+                            <CardText expandable>
+                                {d.description}
+                            </CardText>
+                        </Card>
                     </div>
-                </div>
+                </div>)
             })
+            var allComplainsCards = (
+                <div className="row">
+                    {crimeCard}
+                </div>
+            )
         }
+
         return (
             <div className="App">
-                <div className="App-header">
-                    <h1>Crime</h1>
+                <div>
+                    <h1>Crimes</h1>
                 </div>
-                {complains?complainCard:complains}
+                {crimes.length > 0 ? allComplainsCards : <div className="loader"></div>}
             </div>
         );
     }

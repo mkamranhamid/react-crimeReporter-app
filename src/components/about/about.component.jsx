@@ -2,8 +2,13 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { browserHistory } from 'react-router';
 import TextField from 'material-ui/TextField';
+import muiThemeable from 'material-ui/styles/muiThemeable';
 import Paper from 'material-ui/Paper';
-import RaisedButton from 'material-ui/RaisedButton'
+import RaisedButton from 'material-ui/RaisedButton';
+import {
+  grey900,
+  darkBlack
+} from 'material-ui/styles/colors';
 
 import {GitAction} from '../../store/action/gitAction'
 import './about.component.css';
@@ -21,6 +26,10 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
+const btnStyle = {
+  color: grey900,
+}
+
 
 class AboutComponent extends Component {
   constructor() {
@@ -33,6 +42,7 @@ class AboutComponent extends Component {
     email: '',
     password: ''
   }
+
   OnSubmitLogin(e) {
     e.preventDefault();
     var email = e.target.firstChild.value;
@@ -56,33 +66,35 @@ class AboutComponent extends Component {
     if (this.props.currentUser && this.props.currentUser.email) {
       browserHistory.push('/complain')
     }
-    const buttonStyle = { width: '100%' }
+    const buttonStyle = { backgroundColor: this.props.muiTheme.palette.textColor, width: '100%' }
 
     return (
       <div className="App">
-        <h1>Login</h1>
+        
         <div>
-            <Paper className='Login-Panel'>
+            <Paper className='Login-Panel' style={{width: '800px',margin: '0 auto'}}>
+            <h1>Login</h1>
                 <form style={{ padding: '16px', margin: '0px' }} className='LoginForm' onSubmit={this.OnSubmitLogin}>
-                        
                         <TextField
                         id="text-field-controlled"
                         hintText="Email"
                         value={this.state.email}
+                        type='text'
                         onChange={({ target }) => { this.setState({ email: target.value }) } } />
                     <br />
                     <TextField
                         id="text-field-controlled1"
                         hintText="Password"
                         value={this.state.password}
+                        type='password'
                         onChange={({ target }) => { this.setState({ password: target.value }) } } />
                    
-                    <div className='LoginForm-Submit'>
+                    <div className='LoginForm-Submit' >
                         <RaisedButton
                             label='Sign-in'
                             primary
                             type='submit'
-                            style={buttonStyle}
+                            backgroundColor={this.props.muiTheme.palette.textColor}
                             />
                     </div>
                 </form>
@@ -93,4 +105,4 @@ class AboutComponent extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AboutComponent);
+export default (muiThemeable())(connect(mapStateToProps, mapDispatchToProps)(AboutComponent));

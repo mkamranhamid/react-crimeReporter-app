@@ -4,11 +4,12 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
 import { GitAction } from '../../store/action/gitAction'
 import '../../app/App.css';
+import '../../assets/common.css';
 
 
 function mapStateToProps(state) {
     return {
-        allcomplains: state.counterReducer['missings']
+        allMissings: state.counterReducer['missings']
     };
 }
 
@@ -25,24 +26,36 @@ class MissingPersonComponent extends Component {
     }
     render() {
 
-        let complains = this.props.allcomplains ? Object.keys(this.props.allcomplains).map((key) => { return this.props.allcomplains[key] }) : {};
-        if (complains.length > 0) {
-            var complainCard = complains.map((d, i) => {
-                return <div key={i} className="card">
-                    <div className="container">
-                        <h4><b>{d.title}</b></h4>
-                        <p>{d.description}</p>
+        let missingPersons = this.props.allMissings ? Object.keys(this.props.allMissings).map((key) => { return this.props.allMissings[key] }) : {};
+        if (missingPersons.length > 0) {
+            var missingPersonCard = missingPersons.map((d, i) => {
+                return (<div className="col-xs-6" key={i}>
+                    <div className="box">
+                        <Card>
+                            <CardHeader
+                                title={d.title}
+                                showExpandableButton={true}
+                                />
+                            <CardText expandable>
+                                {d.description}
+                            </CardText>
+                        </Card>
                     </div>
-                </div>
+                </div>)
             })
+            var allComplainsCards = (
+                <div className="row">
+                    {missingPersonCard}
+                </div>
+            )
         }
         return (
             <div className="App">
-                <div className="App-header">
+                <div>
                     <h1>Missing Persons</h1>
                 </div>
 
-                {complains ? complainCard : complains}
+                {missingPersons.length > 0 ? allComplainsCards : <div className="loader"></div>}
             </div>
         );
     }

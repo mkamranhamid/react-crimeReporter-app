@@ -55,7 +55,22 @@ export function counterReducer(state = INITIAL_STATE, action) {
         case GitAction.FileReport:
             return Object.assign({}, state, { loading: true });
         case GitAction.Filed:
-            return Object.assign({}, state, { loading: false, report: action.payload });
+            var newReportObj = Object.assign({}, state );
+            newReportObj.loading = false;
+            var whatValue = action.payload.value.toLowerCase();
+            var gotValue = whatValue.indexOf('missing')>-1?'missings': whatValue;
+            if(gotValue){
+                for(var key in action.payload){
+                newReportObj[gotValue][key] = action.payload[key]
+            }
+            }
+            return newReportObj;
+        //==============
+        //LOGOUT
+        case GitAction.Logout:
+            return Object.assign({}, state, { loading: true });
+        case GitAction.succfullyLogout:
+            return Object.assign({}, state, { loading: false,currentUser:{} });
         //==============
 
         case GitAction.Success:

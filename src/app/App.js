@@ -3,36 +3,76 @@ import { Link, browserHistory } from 'react-router';
 import { connect } from "react-redux";
 
 import AppBar from 'material-ui/AppBar';
-import FlatButton from 'material-ui/FlatButton'
+import FlatButton from 'material-ui/FlatButton';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+import IconButton from 'material-ui/IconButton';
+import { GitAction } from '../store/action/gitAction'
 
 import './App.css';
 
-function mapStateToProps(state) {
+const mapStateToProps = (state)=> {
   return {
     currentUser: state.counterReducer['currentUser']
   };
 }
+const mapDispatchToProps = (dispatch)=> {
+  return {
+    logOutUser: () => dispatch(GitAction.CallLogout())
+  };
+}
 
 class App extends Component {
+  constructor(props){
+    super(props)
+    if (!this.props.currentUser || !this.props.currentUser.email) {return}
+    if (!this.props.currentUser || !this.props.currentUser.email) {
+      browserHistory.push('/login');
+      console.log('jks');
+    }
+  }
+  state = {
+    open: true,
+
+  }
+  handleHumberger() {
+    this.setState({ open: !this.state.open }) 
+  }
+  handleMenu(routeName) {
+    this.setState({ open: !this.state.open })
+    browserHistory.push(`/${routeName}`)
+  }
+  handleLogout() {
+    this.props.logOutUser()
+    browserHistory.push('/')
+  }
   render() {
+    // if (this.props.currentUser && !this.props.currentUser.email) {
+    //   browserHistory.push('/login')
+    //   console.log('jks')
+    // }
     var menuList = ['Signup', 'Login', 'Complains'];
     const buttonStyle = { color: 'white' };
 
-    var linkList = menuList.map((d, i) => {
-      return <li key={i}><Link to={d.toLowerCase()}>{d}</Link></li>
-    })
+    const drawerBeforeLogin = (
+      <div>
+        <MenuItem onTouchTap={this.handleMenu.bind(this, 'missingPerson')}>Missing Person</MenuItem>
+        <MenuItem onTouchTap={this.handleMenu.bind(this, 'crime')}>Crime</MenuItem>
+      </div>
+    )
+    const drawerAfterLogin = (
+      <div>
+        <MenuItem onTouchTap={this.handleMenu.bind(this, 'missingPerson')}>Missing Person</MenuItem>
+        <MenuItem onTouchTap={this.handleMenu.bind(this, 'crime')}>Crime</MenuItem>
+        <MenuItem onTouchTap={this.handleMenu.bind(this, 'complain')}>Complain</MenuItem>
+        <MenuItem onTouchTap={this.handleMenu.bind(this, 'registercomplain')}>Register Complain</MenuItem>
+      </div>
+    )
+    const showDrawerMenu = (this.props.currentUser && this.props.currentUser.email) ? drawerAfterLogin : drawerBeforeLogin;
+
     const beforeLogin = (
       <div className='Navbar-Main-Menu'>
-        <FlatButton
-          label='Missing Persons'
-          style={buttonStyle}
-          onClick={() => browserHistory.push('/missingPerson')}
-          />
-          <FlatButton
-          label='Crimes'
-          style={buttonStyle}
-          onClick={() => browserHistory.push('/crime')}
-          />
         <FlatButton
           label='Sign Up'
           style={buttonStyle}
@@ -45,39 +85,38 @@ class App extends Component {
           />
       </div>
     );
+    const humberger = (
+      <IconButton onClick={this.handleHumberger.bind(this)}>
+        <NavigationMenu />
+      </IconButton>
+    );
     const navbar = (this.props.currentUser && this.props.currentUser.email) ? (
       <div className='Navbar-Main-Menu'>
         <FlatButton
-          label='Missing Persons'
+          label='Logout'
           style={buttonStyle}
-          onClick={() => browserHistory.push('/missingPerson')}
-          />
-          <FlatButton
-          label='Crimes'
-          style={buttonStyle}
-          onClick={() => browserHistory.push('/crime')}
-          />
-          <FlatButton
-          label='Complains'
-          style={buttonStyle}
-          onClick={() => browserHistory.push('/complain')}
-          />
-        <FlatButton
-          label='Register Complain'
-          style={buttonStyle}
-          onClick={() => browserHistory.push('/registercomplain')}
+          onClick={this.handleLogout.bind(this)}
           />
       </div>
     ) : beforeLogin;
+    var paddingStyleBody = this.state.open ? { paddingLeft: '256px' } : { paddingRight: '0' };
+    var leftAppbar = this.state.open ? { left: '256px' } : { left: '0' };
     return (
       <div className="App">
         <div>
-          <AppBar title="Crime Reporter" iconClassNameRight="muidocs-icon-navigation-expand-more" iconElementRight={navbar} />
+          <AppBar iconElementLeft={humberger} iconElementRight={navbar} />
+          <Drawer
+            docked={false}
+            width={250}
+            open={this.state.open}
+            onRequestChange={(open) => this.setState({ open })}>
+            {showDrawerMenu}
+          </Drawer>
         </div>
-        {this.props.children}
+        <div> {this.props.children}</div>
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps, null)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

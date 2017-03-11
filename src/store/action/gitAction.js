@@ -31,6 +31,10 @@ export class GitAction {
     static FileReport = 'File-REPORT';
     static Filed = 'FILED';
 
+    //LOGOUT
+    static Logout = 'LOGOUT';
+    static succfullyLogout = 'SUCCESSFULLY-LOGGED-OUT';
+
     static CallGetData(somedata) {
         return {
             type: GitAction.GetData,
@@ -74,6 +78,12 @@ export class GitAction {
         return {
             type: GitAction.FileReport,
             payload: somedata
+        }
+    }
+    
+    static CallLogout() {
+        return {
+            type: GitAction.Logout
         }
     }
 }

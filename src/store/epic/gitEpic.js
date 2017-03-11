@@ -57,10 +57,12 @@ export class GitEpic {
                 var nodeToAddData = payload.value.toLowerCase();
                 nodeToAddData = nodeToAddData.indexOf('missing')>-1?'missing': nodeToAddData;
                 return firebase.database().ref(`${nodeToAddData}`).push(payload).then((userInfo)=> {
-                    
+                    var storeNode = userInfo.path.o[1];
+                    var payloadObj = {};
+                    payloadObj[storeNode] = payload;
                     return {
                                 type: 'FILED',
-                                payload: payload
+                                payload: payloadObj
                             }
                 })
             })
@@ -88,6 +90,15 @@ export class GitEpic {
                     return {
                         type: 'SUCCESSFULLY-LOGIN',
                         payload: payload
+                    }
+                })
+            })
+    LogoutUser = (action$) =>
+        action$.ofType(GitAction.Logout)
+            .switchMap(({payload}) => {
+                return firebase.auth().signOut().then(() => {
+                    return {
+                        type: 'SUCCESSFULLY-LOGGED-OUT'
                     }
                 })
             })
