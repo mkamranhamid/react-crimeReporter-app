@@ -45,10 +45,6 @@ class AboutComponent extends Component {
 
   OnSubmitLogin(e) {
     e.preventDefault();
-    var email = e.target.firstChild.value;
-    var password = e.target.firstChild.value;
-    console.log('email ', email)
-    console.log('password ', password)
     this.props.loginUser(this.state)
   }
   handleChange(e) {
